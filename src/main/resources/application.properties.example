@@ -1,0 +1,6 @@
+spring.application.name=backend-reciclaje
+spring.datasource.url=jdbc:postgresql://localhost:5432/tu_base_de_datos
+spring.datasource.username=tu_usuario
+spring.datasource.password=tu_password
+spring.jpa.hibernate.ddl-auto=update
+server.port=8080
