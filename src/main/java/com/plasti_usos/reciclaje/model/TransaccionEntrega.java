@@ -2,7 +2,11 @@ package com.plasti_usos.reciclaje.model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,8 +21,12 @@ public class TransaccionEntrega {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne // Una Transaccion pertenece a un Usuario (Reciclador)
-    private Usuario reciclador;
+    @Enumerated(EnumType.STRING)
+    private EstadoTransaccion estado = EstadoTransaccion.PENDIENTE; // Por defecto, la transacción inicia como pendiente
+
+    @ManyToOne
+    @JsonIgnore
+    private Reciclador reciclador;
 
     @ManyToOne // Una transaccion ocurre en un Punto de Recolección o fisico
     private PuntoRecoleccion punto;

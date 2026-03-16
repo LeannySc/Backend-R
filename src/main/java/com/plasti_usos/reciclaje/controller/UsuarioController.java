@@ -1,15 +1,21 @@
 package com.plasti_usos.reciclaje.controller;
 
+import com.plasti_usos.reciclaje.model.Reciclador;
 import com.plasti_usos.reciclaje.model.Rol;
+import com.plasti_usos.reciclaje.model.TransaccionEntrega;
 import com.plasti_usos.reciclaje.model.Usuario;
 import com.plasti_usos.reciclaje.repository.UsuarioRepository;
 import com.plasti_usos.reciclaje.service.UsuarioService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/identidad")
@@ -47,6 +53,25 @@ public class UsuarioController {
         System.out.println("[API] Actualizando usuario ID: " + id);
         boolean exito = service.modificarPerfil(id, datos.get("nombre"), datos.get("contrasena"));
         return ResponseEntity.ok(exito);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Usuario> obtenerUsuario(@PathVariable Long id) {
+        return usuarioRepository.findById(id)
+                .map(user -> ResponseEntity.ok(user))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/historial")
+    public List<TransaccionEntrega> verHistorial(@PathVariable Long id) {
+        Usuario u = usuarioRepository.findById(id).orElseThrow();
+        System.out.println("[HISTORIAL] Obteniendo historial para usuario ID: " + id + " con rol: " + u.getRol());
+
+        if (u instanceof Reciclador) {
+            return ((Reciclador) u).verHistorial();
+        }
+        return new ArrayList<>();
+        // return service.obtenerHistorial(ID);
     }
 
 }

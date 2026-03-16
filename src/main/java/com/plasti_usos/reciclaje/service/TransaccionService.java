@@ -20,8 +20,13 @@ public class TransaccionService {
 
     @Transactional
     public TransaccionEntrega procesarEntrega(Long usuarioId, Long puntoId, double kilos) {
-        Usuario reciclador = usuarioRepo.findById(usuarioId)
+
+        Usuario baseUser = usuarioRepo.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        if (!(baseUser instanceof Reciclador)) {
+            throw new RuntimeException("El usuario debe ser un reciclador para realizar entregas");
+        }
+        Reciclador reciclador = (Reciclador) baseUser;
 
         PuntoRecoleccion punto = puntoRepo.findById(puntoId)
                 .orElseThrow(() -> new RuntimeException("Punto no encontrado"));

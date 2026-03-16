@@ -8,15 +8,15 @@ import jakarta.persistence.Entity;
 @Entity
 @DiscriminatorValue("ADMINISTRADOR")
 public class Administrador extends Usuario {
-    private Integer nivelPrivilegios = 0;
+    private Integer nivelPrivilegios = 1;
 
     @Override
     public List<String> obtenerPermisos() {
-        return List.of("GESTIONAR_PUNTOS", "GESTIONAR_USUARIOS", "VER_REPORTES");
+        return List.of("MODIFICAR_STOCK", "BORRAR_USUARIOS", "VER_METRICAS_CIUDAD", "EDITAR_PUNTOS");
     }
 
     @Override
     public String obtenerTablero() {
-        return "VISTA_ADMINISTRADOR: Nivel de acceso " + this.nivelPrivilegios;
+        return "Panel Maestro de Popayán - Privilegios nivel: " + this.nivelPrivilegios;
     }
 }
