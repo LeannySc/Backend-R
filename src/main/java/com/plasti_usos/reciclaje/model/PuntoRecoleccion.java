@@ -17,4 +17,8 @@ public class PuntoRecoleccion {
     private String nombre;
     private String direccion;
     private String codigoQR; // Para validar la entrega física
+
+    // PuntoRecoleccion.java
+    private Double latitud; // Usa D mayúscula
+    private Double longitud; // Usa D mayúscula
 }
