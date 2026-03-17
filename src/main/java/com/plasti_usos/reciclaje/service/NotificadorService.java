@@ -12,7 +12,11 @@ public class NotificadorService {
     private List<Notificador> notulistas;
 
     public void notificar(String mensaje) {
-        notulistas.forEach(n -> n.enviar(mensaje));
+        System.out.println("[NOTIFICADOR SERVICE] Enviando notificación: " + mensaje);
+        if (notulistas != null) {
+            notulistas.forEach(n -> n.enviar(mensaje));
+        }
+
     }
 
 }

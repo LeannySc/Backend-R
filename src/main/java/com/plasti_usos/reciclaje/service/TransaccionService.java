@@ -17,6 +17,8 @@ public class TransaccionService {
     private PuntoRecoleccionRepository puntoRepo;
     @Autowired
     private CalculadoraPuntos calculadora; // Aquí inyecta tu estrategia (Estándar o Campaña)
+    @Autowired
+    private NotificadorService notificadorService;
 
     @Transactional
     public TransaccionEntrega procesarEntrega(Long usuarioId, Long puntoId, double kilos) {
@@ -32,11 +34,11 @@ public class TransaccionService {
                 .orElseThrow(() -> new RuntimeException("Punto no encontrado"));
 
         // 1. Aplicamos el Patrón Strategy para calcular puntos
-        int puntosGañados = calculadora.calcular(kilos);
+        int puntosGanados = calculadora.calcular(kilos);
 
         // 2. Actualizamos el saldo del usuario (Lógica del UML)
         int saldoActual = reciclador.getSaldoPuntos() != null ? reciclador.getSaldoPuntos() : 0;
-        reciclador.setSaldoPuntos(saldoActual + puntosGañados);
+        reciclador.setSaldoPuntos(saldoActual + puntosGanados);
         usuarioRepo.save(reciclador);
 
         // 3. Registramos la transacción
@@ -44,8 +46,16 @@ public class TransaccionService {
         t.setReciclador(reciclador);
         t.setPunto(punto);
         t.setCantidadKilos(kilos);
-        t.setPuntosOtorgados(puntosGañados);
+        t.setPuntosOtorgados(puntosGanados);
+        t.setEstado(EstadoTransaccion.PENDIENTE);
+        TransaccionEntrega guardada = transaccionRepo.save(t);
 
-        return transaccionRepo.save(t);
+        String mensaje = String.format("¡Hola %s! Se ha registrado tu entrega de %.2f kg en %s. Puntos pendientes: %d",
+                reciclador.getNombre(), kilos, punto.getNombre(), puntosGanados);
+
+        notificadorService.notificar(mensaje);
+
+        return guardada;
+        // return transaccionRepo.save(t);
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 //import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @RestController
 @RequestMapping("/api/puntos")
 @CrossOrigin(origins = "*")
@@ -27,10 +26,17 @@ public class PuntoController {
     public PuntoRecoleccion crear(@RequestBody PuntoRecoleccion punto) {
         return repository.save(punto);
     }
+
     @GetMapping("/{id}")
     public String getMethodName(@RequestParam String param) {
         return new String();
     }
-    
+
+    @GetMapping("/monitor-recoleccion")
+    public List<PuntoRecoleccion> verBotesLlenos() {
+        return repository.findAll().stream()
+                .filter(p -> p.getEstadoBote().equals("LLENO"))
+                .toList();
+    }
 
 }
