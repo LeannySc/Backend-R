@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 //import org.hibernate.engine.internal.Cascade;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+//import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.plasti_usos.reciclaje.service.CalculadoraPuntos;
 
 import jakarta.persistence.CascadeType;
@@ -32,10 +33,11 @@ public class TransaccionEntrega {
     private EstadoTransaccion estado = EstadoTransaccion.PENDIENTE; // PENDIENTE, VALIDADA, RECHAZADA
 
     @ManyToOne
-    @JsonIgnore
+    @JsonIgnoreProperties({ "historialEntrega", "contrasena", "pedidos", "entregas" })
     private Reciclador reciclador;
 
     @ManyToOne // Una transaccion ocurre en un Punto de Recolección o fisico
+    @JsonIgnoreProperties({ "materiales", "encargados", "entregas" })
     private PuntoRecoleccion punto;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

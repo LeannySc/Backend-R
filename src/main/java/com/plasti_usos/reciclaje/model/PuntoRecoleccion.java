@@ -2,6 +2,8 @@ package com.plasti_usos.reciclaje.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -23,13 +25,15 @@ public class PuntoRecoleccion {
     private String codigoQR; // Para validar la entrega física
     private Double latitud;
     private Double longitud;
-    // Nuevos metodos para el rol recolectar o encargado de punto de recolección y futuro arduino
+    // Nuevos metodos para el rol recolectar o encargado de punto de recolección y
+    // futuro arduino
     private double nivelLlenado = 0.0; // Porcentaje de llenado del contenedor
     private double capacidadMaximakg = 50.0; // Capacidad máxima en kg del contenedor
     private String estadoBote = "VACÍO"; // VACÍO, MEDIO, LLENO
     private boolean necesitaRecoleccion = false;
 
     @OneToMany(mappedBy = "punto", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("punto")
     private List<TipoMaterial> materiales; // Para saber qué tipos de materiales se pueden entregar en este punto
 
     public List<String> obtenerMateriales() {

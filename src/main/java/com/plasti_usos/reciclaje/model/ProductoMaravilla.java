@@ -14,4 +14,8 @@ public class ProductoMaravilla {
     private int costoPuntos;
     private int stock;
     private String imagenUrl;
+
+    public boolean getDisponibilidad() {
+        return this.stock > 0;
+    }
 }

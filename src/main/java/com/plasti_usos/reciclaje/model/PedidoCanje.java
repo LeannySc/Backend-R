@@ -27,4 +27,7 @@ public class PedidoCanje {
     private String estado = "SOLICITADO"; // SOLICITADO, EN_PROCESO, ENVIADO, ENTREGADO
     private LocalDateTime fechaPedido = LocalDateTime.now();
 
+    public void confirmar() {
+        this.estado = "ENTREGADO";
+    }
 }

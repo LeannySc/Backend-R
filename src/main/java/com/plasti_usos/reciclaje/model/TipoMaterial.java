@@ -1,5 +1,7 @@
 package com.plasti_usos.reciclaje.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -21,6 +23,7 @@ public class TipoMaterial {
 
     @ManyToOne
     @JoinColumn(name = "punto_recoleccion_id") // Clave foránea a PuntoRecoleccion
+    @JsonIgnore
     private PuntoRecoleccion punto;
 
 }

@@ -14,8 +14,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/identidad")
@@ -31,13 +29,18 @@ public class UsuarioController {
     }
 
     @PostMapping("/registro")
-    public Usuario registrar(@RequestBody Usuario usuario) {
-        return service.registrarNuevoUsuario(usuario);
+    public ResponseEntity<Usuario> registrar(@RequestBody Map<String, Object> datos) {
+        String rolStr = datos.getOrDefault("rol", "RECICLADOR").toString();
+        Rol rol = Rol.valueOf(rolStr);
+
+        Usuario creado = service.fabricarUsuario(rol, datos);
+        return ResponseEntity.ok(creado);
     }
 
     @PostMapping("/fabricar")
-    public Usuario fabricarConFactory(@RequestParam Rol rol, @RequestBody Map<String, Object> datos) {
-        return service.fabricarUsuario(rol, datos);
+    public ResponseEntity<Usuario> fabricarConFactory(@RequestParam Rol rol, @RequestBody Map<String, Object> datos) {
+        Usuario creado = service.fabricarUsuario(rol, datos);
+        return ResponseEntity.ok(creado);
     }
 
     @PostMapping("/login")
