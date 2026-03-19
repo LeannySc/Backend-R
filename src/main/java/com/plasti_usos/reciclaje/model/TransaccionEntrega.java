@@ -6,6 +6,7 @@ import java.util.List;
 //import org.hibernate.engine.internal.Cascade;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.plasti_usos.reciclaje.service.CalculadoraPuntos;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -28,7 +29,7 @@ public class TransaccionEntrega {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private EstadoTransaccion estado = EstadoTransaccion.PENDIENTE; // Por defecto, la transacción inicia como pendiente
+    private EstadoTransaccion estado = EstadoTransaccion.PENDIENTE; // PENDIENTE, VALIDADA, RECHAZADA
 
     @ManyToOne
     @JsonIgnore
@@ -45,5 +46,20 @@ public class TransaccionEntrega {
     private double cantidadKilos;
     private int puntosOtorgados;
     private LocalDateTime fechaEntrega = LocalDateTime.now();
+
+    public void aprobar() {
+        this.estado = EstadoTransaccion.VALIDADA;
+    }
+
+    public void rechazar() {
+        this.estado = EstadoTransaccion.RECHAZADA;
+    }
+
+    public int calcularPuntos(CalculadoraPuntos calculadora) {
+
+        this.puntosOtorgados = calculadora.calcular(this.detalles);
+        return this.puntosOtorgados;
+
+    }
 
 }

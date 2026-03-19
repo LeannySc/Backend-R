@@ -21,9 +21,9 @@ public class PuntoRecoleccion {
     private String nombre;
     private String direccion;
     private String codigoQR; // Para validar la entrega física
-    // PuntoRecoleccion.java
-    private Double latitud; // Usa D mayúscula
-    private Double longitud; // Usa D mayúscula
+    private Double latitud;
+    private Double longitud;
+    // Nuevos metodos para el rol recolectar o encargado de punto de recolección y futuro arduino
     private double nivelLlenado = 0.0; // Porcentaje de llenado del contenedor
     private double capacidadMaximakg = 50.0; // Capacidad máxima en kg del contenedor
     private String estadoBote = "VACÍO"; // VACÍO, MEDIO, LLENO
