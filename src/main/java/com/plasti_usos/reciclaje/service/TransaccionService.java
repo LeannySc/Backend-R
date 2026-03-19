@@ -17,10 +17,13 @@ public class TransaccionService {
     private PuntoRecoleccionRepository puntoRepo;
     @Autowired
     private CalculadoraPuntos calculadora; // Aquí inyecta parte de la estrategia (Estandar o Campaña)
-    /*@Autowired
-    private CalculoCampana calculadora; // Inyectamos la estrategia de campaña para futuras pruebas*/
+    /*
+     * @Autowired
+     * private CalculoCampana calculadora; // Inyectamos la estrategia de campaña
+     * para futuras pruebas
+     */
     @Autowired
-    private NotificadorService notificadorService;
+    private ServicioNotificaciones notificadorService;
 
     @Transactional
     public TransaccionEntrega procesarEntrega(Long usuarioId, Long puntoId, double kilos) {
@@ -71,6 +74,7 @@ public class TransaccionService {
                 reciclador.getNombre(), kilos, punto.getNombre(), puntosGanados);
 
         notificadorService.notificar(mensaje);
+        notificadorService.notificar("¡Genial! Has entregado " + kilos + "kg de plástico en Campanario.");
 
         return guardada;
     }

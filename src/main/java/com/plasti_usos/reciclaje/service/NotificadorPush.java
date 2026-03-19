@@ -3,12 +3,13 @@ package com.plasti_usos.reciclaje.service;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NotificadorPush implements Notificador {
+public class NotificadorPush implements NotificadorUsuarios {
+
+    private String tokenDispositivo = "ID-MOVILE-TEST-123";
 
     @Override
-    public void enviar(String m) {
-        // Lógica para enviar notificación push
-        System.out.println("[PUSH NOTIFICACION]" + m);
+    public void actualizar(String mensaje) {
+        System.out.println(" [PUSH NOTIFICATION SENT]: " + mensaje + " a dispositivo " + tokenDispositivo);
     }
 
 }

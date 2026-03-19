@@ -17,7 +17,7 @@ public class CanjeService {
     private PedidoCanjeRepository pedidoRepo;
 
     @Autowired
-    private NotificadorService notificadorService;
+    private ServicioNotificaciones notificadorService;
 
     @Transactional
     public PedidoCanje procesarCanje(Long userId, Long productoId, String direccion) {
