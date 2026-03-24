@@ -64,9 +64,9 @@ public class TransaccionService {
         detalle.setPuntosOtorgados(puntosGanados);
 
         // 5. Actualizamos saldo en DB de forma segura
-        int saldoActual = reciclador.getSaldoPuntos() != null ? reciclador.getSaldoPuntos() : 0;
-        reciclador.setSaldoPuntos(saldoActual + puntosGanados);
-        usuarioRepo.save(reciclador);
+        //int saldoActual = reciclador.getSaldoPuntos() != null ? reciclador.getSaldoPuntos() : 0;
+        //reciclador.setSaldoPuntos(saldoActual + puntosGanados);
+        //usuarioRepo.save(reciclador);
         TransaccionEntrega guardada = transaccionRepo.save(t);
 
         // 6. El TRIGGER del Patrón Observer
