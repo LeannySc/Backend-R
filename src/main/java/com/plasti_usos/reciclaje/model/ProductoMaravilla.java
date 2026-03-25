@@ -14,8 +14,11 @@ public class ProductoMaravilla {
     private int costoPuntos;
     private int stock;
     private String imagenUrl;
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private boolean activo = true;
 
     public boolean getDisponibilidad() {
         return this.stock > 0;
     }
+
 }

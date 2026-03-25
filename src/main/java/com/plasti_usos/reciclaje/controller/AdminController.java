@@ -1,9 +1,11 @@
 package com.plasti_usos.reciclaje.controller;
 
 import com.plasti_usos.reciclaje.model.EstadoTransaccion;
+import com.plasti_usos.reciclaje.model.ProductoMaravilla;
 import com.plasti_usos.reciclaje.model.Usuario;
 import com.plasti_usos.reciclaje.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
@@ -24,17 +26,52 @@ public class AdminController {
         Map<String, Object> reporte = new HashMap<>();
 
         reporte.put("totalUsuarios", usuarioRepo.count());
-        double totalKg = transaccionRepo.findAll().stream().filter(t -> t.getEstado() == EstadoTransaccion.VALIDADA)
-                .mapToDouble(t -> t.getCantidadKilos()).sum();
+
+        Double totalkg = transaccionRepo.sumarkilosTotalesValidados();
+
+        // double totalKg = transaccionRepo.findAll().stream().filter(t -> t.getEstado()
+        // == EstadoTransaccion.VALIDADA)
+        // .mapToDouble(t -> t.getCantidadKilos()).sum();
 
         reporte.put("stockProductos", productoRepo.findAll());
-        reporte.put("totalKilos", totalKg);
+        // reporte.put("totalKilos", totalKg);
+        reporte.put("totalKilos", totalkg != null ? totalkg : 0.0);
         return reporte;
     }
 
     @GetMapping("/gestionar-usuarios")
     public List<Usuario> gestionarUsuarios() {
         return usuarioRepo.findAll();
+    }
+
+    @PostMapping("/productos")
+    public ResponseEntity<ProductoMaravilla> crearProducto(@RequestBody ProductoMaravilla nuevo) {
+        // Validación básica (Criterio de HU-09)
+        if (nuevo.getNombre() == null || nuevo.getCostoPuntos() < 0) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(productoRepo.save(nuevo));
+    }
+
+    @PutMapping("/productos/{id}")
+    public ResponseEntity<ProductoMaravilla> editarProducto(@PathVariable Long id,
+            @RequestBody ProductoMaravilla datos) {
+
+        System.out.println("AMIND Actualizando producto ID:" + id);
+        return productoRepo.findById(id).map(p -> {
+            p.setNombre(datos.getNombre());
+            p.setDescripcion(datos.getDescripcion());
+            p.setCostoPuntos(datos.getCostoPuntos());
+            p.setStock(datos.getStock());
+            p.setImagenUrl(datos.getImagenUrl());
+            p.setActivo(datos.isActivo());
+            return ResponseEntity.ok(productoRepo.save(p));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/productos/todos")
+    public List<ProductoMaravilla> listarTodoElCatalogo() {
+        return productoRepo.findAll();
     }
 
 }
