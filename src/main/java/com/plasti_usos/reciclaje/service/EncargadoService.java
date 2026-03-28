@@ -31,7 +31,6 @@ public class EncargadoService {
         if (t.getEstado() != EstadoTransaccion.PENDIENTE) {
             throw new RuntimeException("Solo se pueden aprobar transacciones pendientes");
         }
-
         t.setEstado(EstadoTransaccion.VALIDADA);
 
         Reciclador r = (Reciclador) usuarioRepo.findById(t.getReciclador().getId())
