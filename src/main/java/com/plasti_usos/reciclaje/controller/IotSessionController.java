@@ -28,6 +28,7 @@ public class IotSessionController {
     // El JSON que manda el Arduino: { "puntoId": 4, "kilos": 5.4 }
     @PostMapping("/registrar-peso")
     public ResponseEntity<TransaccionEntrega> registrarPeso(@RequestBody Map<String, Object> data) {
+        
         Long puntoId = Long.valueOf(data.get("puntoId").toString());
         double kilos = Double.parseDouble(data.get("kilos").toString());
 

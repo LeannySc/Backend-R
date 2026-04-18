@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/identidad")
-@CrossOrigin(origins = "*") // Importante: Permite que React se conecte sin bloqueos
+@CrossOrigin(origins = "*") 
 public class UsuarioController {
 
     private final UsuarioRepository usuarioRepository;

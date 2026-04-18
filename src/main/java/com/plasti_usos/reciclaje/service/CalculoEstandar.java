@@ -16,8 +16,8 @@ public class CalculoEstandar implements CalculadoraPuntos {
     private Map<String, Integer> tarifasBase = new HashMap<>();
 
     public CalculoEstandar() {
-        tarifasBase.put("PET", 10); // 10 puntos por kg de PET
-        tarifasBase.put("VIDRIO", 5); // 5 puntos por kg de vidrio
+        tarifasBase.put("PET", 10); 
+        tarifasBase.put("VIDRIO", 5); 
     }
 
     @Override

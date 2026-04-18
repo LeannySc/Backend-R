@@ -19,23 +19,21 @@ public class PuntoRecoleccion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private boolean activo = true; // Para saber si el punto está operativo o no
+    private boolean activo = true; 
     private String nombre;
     private String direccion;
-    private String codigoQR; // Para validar la entrega física
+    private String codigoQR; 
     private Double latitud;
     private Double longitud;
-    // Nuevos metodos para el rol recolectar o encargado de punto de recolección y
-    // futuro arduino
-    private double nivelLlenado = 0.0; // Porcentaje de llenado del contenedor
-    private double capacidadMaximakg = 50.0; // Capacidad máxima en kg del contenedor
-    private String estadoBote = "VACÍO"; // VACÍO, MEDIO, LLENO
+    private double nivelLlenado = 0.0; 
+    private double capacidadMaximakg = 50.0;
+    private String estadoBote = "VACÍO"; 
     private boolean necesitaRecoleccion = false;
 
     @OneToMany(mappedBy = "punto", fetch = FetchType.LAZY)
     @JsonIgnoreProperties("punto")
-    private List<TipoMaterial> materiales; // Para saber qué tipos de materiales se pueden entregar en este punto
-
+    private List<TipoMaterial> materiales;
+    
     public List<String> obtenerMateriales() {
         return materiales.stream().map(TipoMaterial::getNombre).toList();
     }

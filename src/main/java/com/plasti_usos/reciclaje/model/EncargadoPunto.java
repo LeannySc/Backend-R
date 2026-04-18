@@ -20,10 +20,10 @@ public class EncargadoPunto extends Usuario {
     private LocalDateTime asignadoEn = LocalDateTime.now();
 
     @ManyToOne
-    @JoinColumn(name = "punto_recoleccion_id") // Clave foránea a PuntoRecoleccion
+    @JoinColumn(name = "punto_recoleccion_id")
     private PuntoRecoleccion puntoAsignado;
 
-    private Long puntoID; // Se llena solo si es Encargado
+    private Long puntoID;
     private LocalDate asignadoEl = LocalDate.now();
 
     @Override

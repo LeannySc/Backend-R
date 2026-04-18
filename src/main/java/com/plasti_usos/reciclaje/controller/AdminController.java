@@ -25,15 +25,8 @@ public class AdminController {
         Map<String, Object> reporte = new HashMap<>();
 
         reporte.put("totalUsuarios", usuarioRepo.count());
-
         Double totalkg = transaccionRepo.sumarkilosTotalesValidados();
-
-        // double totalKg = transaccionRepo.findAll().stream().filter(t -> t.getEstado()
-        // == EstadoTransaccion.VALIDADA)
-        // .mapToDouble(t -> t.getCantidadKilos()).sum();
-
         reporte.put("stockProductos", productoRepo.findAll());
-        // reporte.put("totalKilos", totalKg);
         reporte.put("totalKilos", totalkg != null ? totalkg : 0.0);
         return reporte;
     }
@@ -45,7 +38,7 @@ public class AdminController {
 
     @PostMapping("/productos")
     public ResponseEntity<ProductoMaravilla> crearProducto(@RequestBody ProductoMaravilla nuevo) {
-        // Validación básica (Criterio de HU-09)
+        
         if (nuevo.getNombre() == null || nuevo.getCostoPuntos() < 0) {
             return ResponseEntity.badRequest().build();
         }

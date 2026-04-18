@@ -11,7 +11,7 @@ public class DetalleEntrega {
     private Long id;
 
     @ManyToOne
-    private TipoMaterial material; // Para saber si es PET, HDPE, etc.
+    private TipoMaterial material; 
 
     private float cantidad;
     private int puntosOtorgados;

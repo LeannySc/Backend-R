@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 
 @Entity
 @Data
-@EqualsAndHashCode(callSuper = true) // Para incluir los campos de Usuario en equals y hashCode
+@EqualsAndHashCode(callSuper = true) 
 @DiscriminatorValue("RECICLADOR")
 public class Reciclador extends Usuario {
 

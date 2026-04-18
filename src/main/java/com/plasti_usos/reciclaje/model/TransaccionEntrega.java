@@ -3,9 +3,6 @@ package com.plasti_usos.reciclaje.model;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-//import org.hibernate.engine.internal.Cascade;
-
-//import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.plasti_usos.reciclaje.service.CalculadoraPuntos;
 
@@ -30,20 +27,20 @@ public class TransaccionEntrega {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private EstadoTransaccion estado = EstadoTransaccion.PENDIENTE; // PENDIENTE, VALIDADA, RECHAZADA
+    private EstadoTransaccion estado = EstadoTransaccion.PENDIENTE; 
 
     @ManyToOne
     @JsonIgnoreProperties({ "historialEntrega", "contrasena", "pedidos", "entregas" })
     private Reciclador reciclador;
 
-    @ManyToOne // Una transaccion ocurre en un Punto de Recolección o fisico
+    @ManyToOne 
     @JsonIgnoreProperties({ "materiales", "encargados", "entregas" })
     private PuntoRecoleccion punto;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "transaccion_id") // Clave foránea en DetalleEntrega
-    private List<DetalleEntrega> detalles = new ArrayList<>(); // Lista de materiales entregados con sus cantidades y
-                                                               // puntos otorgados
+    @JoinColumn(name = "transaccion_id")
+    private List<DetalleEntrega> detalles = new ArrayList<>(); 
+                                                            
 
     private double cantidadKilos;
     private int puntosOtorgados;

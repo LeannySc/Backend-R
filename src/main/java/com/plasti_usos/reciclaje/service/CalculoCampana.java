@@ -10,7 +10,6 @@ import com.plasti_usos.reciclaje.model.DetalleEntrega;
 public class CalculoCampana implements CalculadoraPuntos {
 
     private float multiplicador = 2.5f;
-    //private String campanaActiva = "Campaña de Reciclaje 2026";
 
     @Override
     public int calcular(List<DetalleEntrega> detalles) {

@@ -19,7 +19,6 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // IMPLEMENTACIÓN DE LA FABRICA (UML: Factory Usuarios)
     public Usuario fabricarUsuario(Rol tipo, Map<String, Object> datos) {
         Usuario nuevoUsuario;
 
@@ -45,10 +44,10 @@ public class UsuarioService {
         nuevoUsuario.setContrasena(obtenerDatoSeguro(datos, "contrasena", "1234"));
         nuevoUsuario.setRol(tipo);
 
-        String pin = String.valueOf((int) (Math.random() * 899999) + 100000); // Genera un PIN de 6 dígitos
+        String pin = String.valueOf((int) (Math.random() * 899999) + 100000);
         nuevoUsuario.setCodigoVerificacion(pin);
         System.out.println("[FACTORY] Código de verificación generado: " + pin);
-        nuevoUsuario.setVerificado(false); // El usuario empieza bloqueado hasta que se verifique su correo
+        nuevoUsuario.setVerificado(false);
 
         String correoInput = obtenerDatoSeguro(datos, "correo", "");
         if (usuarioRepository.findByCorreo(correoInput).isPresent()) {
@@ -58,15 +57,14 @@ public class UsuarioService {
                 + " con el código: " + pin);
         System.out.println();
 
-        return usuarioRepository.save(nuevoUsuario); // Por ahora para validar que el equipo vea la estructura
+        return usuarioRepository.save(nuevoUsuario);
     }
 
     public Usuario registrarNuevoUsuario(Usuario datos) {
-        // Aquí podríamos agregar lógica adicional como validaciones, hashing de
-        // contraseñas, etc.
+
         if (datos.getRol() == Rol.RECICLADOR) {
             System.out.println("[REGISTRO] Registrando nuevo usuario como RECICLADOR");
-            datos.setSaldoPuntos(0); // Inicializamos el saldo de puntos para recicladores
+            datos.setSaldoPuntos(0);
         }
         return usuarioRepository.save(datos);
     }
@@ -94,7 +92,6 @@ public class UsuarioService {
             System.out.println("[DATABASE] Guardando cambios para: " + u.getCorreo());
             u.setNombre(nuevoNombre);
 
-            // Solo cambiamos la contraseña si el usuario escribió una nueva
             if (nuevaContrasena != null && !nuevaContrasena.trim().isEmpty()) {
                 u.setContrasena(nuevaContrasena);
             }
@@ -122,10 +119,4 @@ public class UsuarioService {
             }
         }).orElse(false);
     }
-
-    // user.setNombre(nuevoNombre);
-    // user.setContrasena(nuevaContrasena);
-    // usuarioRepository.save(user);
-    // System.out.println("[PERFIL] Perfil actualizado para: " + user.getCorreo());
-    // return true;
 }

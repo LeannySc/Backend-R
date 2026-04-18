@@ -12,9 +12,6 @@ public class GestorInventario {
     @Autowired
     private ProductoRepository productoRepo;
 
-    // Aunque Spring maneja el Singleton, la lógica de control de stock
-    // garantiza que nadie canjee algo que ya no existe (Misión UML)
-
     @Transactional
     public boolean reservarStock(Long productoId) {
         ProductoMaravilla producto = productoRepo.findById(productoId).orElse(null);

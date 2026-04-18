@@ -24,7 +24,7 @@ public class PedidoCanje {
     private ProductoMaravilla producto;
 
     private String direccionEnvio;
-    private String estado = "SOLICITADO"; // SOLICITADO, EN_PROCESO, ENVIADO, ENTREGADO
+    private String estado = "SOLICITADO";
     private LocalDateTime fechaPedido = LocalDateTime.now();
 
     public void confirmar() {

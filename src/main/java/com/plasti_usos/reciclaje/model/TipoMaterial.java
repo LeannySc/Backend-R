@@ -14,15 +14,15 @@ public class TipoMaterial {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
-    private String nombre; // Ej: PET, HDPE, etc.
-    private float puntosPorUnidad; // Puntos otorgados por cada unidad de este material
+    private String nombre; 
+    private float puntosPorUnidad; 
 
     public float getPuntos() {
         return this.puntosPorUnidad;
     }
 
     @ManyToOne
-    @JoinColumn(name = "punto_recoleccion_id") // Clave foránea a PuntoRecoleccion
+    @JoinColumn(name = "punto_recoleccion_id") 
     @JsonIgnore
     private PuntoRecoleccion punto;
 
