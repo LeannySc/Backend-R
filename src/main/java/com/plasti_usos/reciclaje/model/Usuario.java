@@ -23,8 +23,13 @@ public abstract class Usuario {
 
     @Enumerated(EnumType.STRING)
     private Rol rol;
+    @Column(nullable = false, columnDefinition = "boolean default false") // El usuario empieza bloqueado hasta que se
+                                                                          // verifique su correo
+    private boolean verificado = false;
 
     private LocalDateTime fechaCreacion = LocalDateTime.now();
+
+    private String codigoVerificacion;
 
     public abstract List<String> obtenerPermisos(); // Método abstracto para definir permisos
     // según el tipo de usuario

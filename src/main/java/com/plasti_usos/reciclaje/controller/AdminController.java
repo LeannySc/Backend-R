@@ -1,6 +1,5 @@
 package com.plasti_usos.reciclaje.controller;
 
-import com.plasti_usos.reciclaje.model.EstadoTransaccion;
 import com.plasti_usos.reciclaje.model.ProductoMaravilla;
 import com.plasti_usos.reciclaje.model.Usuario;
 import com.plasti_usos.reciclaje.repository.*;

@@ -14,6 +14,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping("/api/identidad")
@@ -76,5 +79,14 @@ public class UsuarioController {
         return new ArrayList<>();
         // return service.obtenerHistorial(ID);
     }
+
+    @PostMapping("/verificar")
+    public ResponseEntity <Boolean> verificarCuenta(@RequestParam String correo, @RequestParam String codigo  ){
+        System.out.println("[API] Verificando cuenta para: " + correo);
+        boolean resultado = service.validarCuenta(correo, codigo);
+        return ResponseEntity.ok(resultado);
+        //TODO: process POST request
+    }
+    
 
 }

@@ -33,16 +33,30 @@ public class UsuarioService {
             System.out.println("[FACTORY] Creando instancia concreta: ENCARGADO_PUNTO");
             System.out.println("[FACTORY] Instanciando Producto Concreto: ENCARGADO_PUNTO");
             EncargadoPunto e = new EncargadoPunto();
-            e.setPuntoID(Long.valueOf(datos.get("puntoID").toString()));
+            String idString = obtenerDatoSeguro(datos, "puntoID", "0");
+            e.setPuntoID(Long.valueOf(idString));
             nuevoUsuario = e;
         } else {
             nuevoUsuario = new Administrador();
             System.out.println("[FACTORY] Creando instancia concreta: ADMINISTRADOR");
         }
-        nuevoUsuario.setNombre(datos.get("nombre").toString());
-        nuevoUsuario.setCorreo(datos.get("correo").toString());
-        nuevoUsuario.setContrasena(datos.get("contrasena").toString());
+        nuevoUsuario.setNombre(obtenerDatoSeguro(datos, "nombre", "Sin Nombre"));
+        nuevoUsuario.setCorreo(obtenerDatoSeguro(datos, "correo", "error@plastiusos.com"));
+        nuevoUsuario.setContrasena(obtenerDatoSeguro(datos, "contrasena", "1234"));
         nuevoUsuario.setRol(tipo);
+
+        String pin = String.valueOf((int) (Math.random() * 899999) + 100000); // Genera un PIN de 6 dígitos
+        nuevoUsuario.setCodigoVerificacion(pin);
+        System.out.println("[FACTORY] Código de verificación generado: " + pin);
+        nuevoUsuario.setVerificado(false); // El usuario empieza bloqueado hasta que se verifique su correo
+
+        String correoInput = obtenerDatoSeguro(datos, "correo", "");
+        if (usuarioRepository.findByCorreo(correoInput).isPresent()) {
+            throw new RuntimeException("El correo ya está registrado.");
+        }
+        System.out.print("[EMAIL SIMULATION] Enviando correo de verificación a " + nuevoUsuario.getCorreo()
+                + " con el código: " + pin);
+        System.out.println();
 
         return usuarioRepository.save(nuevoUsuario); // Por ahora para validar que el equipo vea la estructura
     }
@@ -60,6 +74,10 @@ public class UsuarioService {
     public Usuario login(String correo, String contrasena) {
         Usuario user = usuarioRepository.findByCorreo(correo)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (!user.isVerificado()) {
+            throw new RuntimeException("Cuenta no verificada. Por favor, verifica tu correo antes de iniciar sesión.");
+        }
 
         if (user.getContrasena().equals(contrasena)) {
             System.out.println("[LOGIN] Usuario autenticado: " + correo);
@@ -84,6 +102,24 @@ public class UsuarioService {
             usuarioRepository.save(u);
             System.out.println("✅ [DATABASE] Datos guardados físicamente en Postgres para ID: " + id);
             return true;
+        }).orElse(false);
+    }
+
+    private String obtenerDatoSeguro(Map<String, Object> datos, String llave, String valorDefecto) {
+        return (datos.get(llave) != null) ? datos.get(llave).toString() : valorDefecto;
+    }
+
+    public boolean validarCuenta(String correo, String codigo) {
+        return usuarioRepository.findByCorreo(correo).map(u -> {
+            if (u.getCodigoVerificacion().equals(codigo)) {
+                u.setVerificado(true);
+                usuarioRepository.save(u);
+                System.out.println("[VALIDACIÓN] Cuenta verificada para: " + correo);
+                return true;
+            } else {
+                System.out.println("[VALIDACIÓN] Código de verificación incorrecto para: " + correo);
+                return false;
+            }
         }).orElse(false);
     }
 
