@@ -16,15 +16,15 @@ public class CalculoEstandar implements CalculadoraPuntos {
     private Map<String, Integer> tarifasBase = new HashMap<>();
 
     public CalculoEstandar() {
-        tarifasBase.put("PET", 10); 
-        tarifasBase.put("VIDRIO", 5); 
+        tarifasBase.put("PET", 10);
+        tarifasBase.put("VIDRIO", 5);
     }
 
     @Override
     public int calcular(List<DetalleEntrega> detalles) {
-
+        // Multiplica la cantidad por los puntos específicos de cada material en la DB
         return (int) detalles.stream()
-                .mapToDouble(d -> d.getCantidad() * 10)
+                .mapToDouble(d -> d.getCantidad() * d.getMaterial().getPuntosPorUnidad())
                 .sum();
     }
 }

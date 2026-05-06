@@ -13,12 +13,14 @@ public class EncargadoController {
     @Autowired
     private EncargadoService encargadoService;
 
-    @PostMapping("/aprobar")
-    public String aprobar(@RequestParam Long transaccionId, @RequestParam Long encargadoId) {
-        encargadoService.aprobarEntrega(transaccionId, encargadoId);
-        return "✅ Transacción " + transaccionId + " validada con éxito.";
-    }
-
+    /*
+     * @PostMapping("/aprobar")
+     * public String aprobar(@RequestParam Long transaccionId, @RequestParam Long
+     * encargadoId) {
+     * encargadoService.aprobarEntrega(transaccionId, encargadoId);
+     * return "✅ Transacción " + transaccionId + " validada con éxito.";
+     * }
+     */
     @PostMapping("/{puntoId}/Vaciar")
     public String vaciarContenedor(@PathVariable Long puntoId, @RequestParam Long encargadoId) {
         encargadoService.vaciarPunto(puntoId, encargadoId);

@@ -17,10 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping("/api/identidad")
-@CrossOrigin(origins = "*") 
+@CrossOrigin(origins = "*")
 public class UsuarioController {
 
     private final UsuarioRepository usuarioRepository;
@@ -57,7 +56,8 @@ public class UsuarioController {
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<Boolean> actualizar(@PathVariable Long id, @RequestBody Map<String, String> datos) {
         System.out.println("[API] Actualizando usuario ID: " + id);
-        boolean exito = service.modificarPerfil(id, datos.get("nombre"), datos.get("contrasena"));
+        boolean exito = service.modificarPerfil(id, datos.get("nombre"), datos.get("contrasena"), datos.get("apellido"),
+                datos.get("telefono"));
         return ResponseEntity.ok(exito);
     }
 
@@ -81,12 +81,10 @@ public class UsuarioController {
     }
 
     @PostMapping("/verificar")
-    public ResponseEntity <Boolean> verificarCuenta(@RequestParam String correo, @RequestParam String codigo  ){
+    public ResponseEntity<Boolean> verificarCuenta(@RequestParam String correo, @RequestParam String codigo) {
         System.out.println("[API] Verificando cuenta para: " + correo);
         boolean resultado = service.validarCuenta(correo, codigo);
         return ResponseEntity.ok(resultado);
-        //TODO: process POST request
     }
-    
 
 }

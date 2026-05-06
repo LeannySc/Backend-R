@@ -26,6 +26,8 @@ public class CanjeService {
         Usuario usuario = usuarioRepo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
+        System.out.println("LOG GTI: Intento de canje por usuario ID: " + userId + " - Rol: " + usuario.getRol());
+
         if (!(usuario instanceof Reciclador)) {
             throw new RuntimeException("Error: Este usuario no es de tipo Reciclador y no tiene billetera.");
         }
@@ -47,9 +49,8 @@ public class CanjeService {
         }
 
         reciclador.setSaldoPuntos(saldoActual - producto.getCostoPuntos());
-        usuarioRepo.save(reciclador); 
+        usuarioRepo.save(reciclador);
 
-        
         PedidoCanje pedido = new PedidoCanje();
         pedido.setReciclador(reciclador);
         pedido.setProducto(producto);

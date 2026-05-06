@@ -8,8 +8,8 @@ import java.util.List;
 @Entity
 @Data
 
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo_usuario")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,18 +17,20 @@ public abstract class Usuario {
 
     @Column(unique = true)
     private String correo;
+
     private String contrasena;
+
     private String nombre;
+    private String apellido;
+    private String telefono;
 
     @Enumerated(EnumType.STRING)
     private Rol rol;
-    @Column(nullable = false, columnDefinition = "boolean default false")
 
+    @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean verificado = false;
+
     private LocalDateTime fechaCreacion = LocalDateTime.now();
-    private String codigoVerificacion;
-    private Integer saldoPuntos;
-    private Long puntoID;
 
     public abstract List<String> obtenerPermisos();
 
@@ -43,8 +45,11 @@ public abstract class Usuario {
 
     }
 
-    public boolean actualizarPerfil(String nuevoNombre, String nuevaContrasena) {
+    public boolean actualizarPerfil(String nuevoNombre, String nuevoApellido, String nuevoTelefono,
+            String nuevaContrasena) {
         this.nombre = nuevoNombre;
+        this.apellido = nuevoApellido;
+        this.telefono = nuevoTelefono;
         this.contrasena = nuevaContrasena;
 
         return true;

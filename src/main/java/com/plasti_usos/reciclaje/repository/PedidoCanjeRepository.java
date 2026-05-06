@@ -10,4 +10,6 @@ public interface PedidoCanjeRepository extends JpaRepository<PedidoCanje, Long> 
 
     List<PedidoCanje> findByRecicladorId(Long UserId);
 
+    long countByRecicladorId(Long userId);
+
 }

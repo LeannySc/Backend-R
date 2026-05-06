@@ -27,20 +27,24 @@ public class TransaccionEntrega {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private EstadoTransaccion estado = EstadoTransaccion.PENDIENTE; 
+    private EstadoTransaccion estado = EstadoTransaccion.PENDIENTE;
 
     @ManyToOne
     @JsonIgnoreProperties({ "historialEntrega", "contrasena", "pedidos", "entregas" })
+    @JoinColumn(name = "reciclador_usuario_id")
     private Reciclador reciclador;
 
-    @ManyToOne 
+    @ManyToOne
     @JsonIgnoreProperties({ "materiales", "encargados", "entregas" })
     private PuntoRecoleccion punto;
 
+    @ManyToOne
+    @JoinColumn(name = "encargado_id")
+    private EncargadoPunto encargado;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "transaccion_id")
-    private List<DetalleEntrega> detalles = new ArrayList<>(); 
-                                                            
+    private List<DetalleEntrega> detalles = new ArrayList<>();
 
     private double cantidadKilos;
     private int puntosOtorgados;
