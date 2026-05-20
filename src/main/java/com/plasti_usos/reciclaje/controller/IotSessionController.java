@@ -42,13 +42,56 @@ public class IotSessionController {
      * ⚖️ RECEPCIÓN DE PESO (Lo llama el Arduino / Wokwi)
      * JSON esperado: { "puntoId": 9, "kilos": 2.5 }
      */
-    @PostMapping("/registrar-peso")
-    public ResponseEntity<TransaccionEntrega> registrarPeso(@RequestBody Map<String, Object> data) {
-        Long puntoId = Long.valueOf(data.get("puntoId").toString());
-        double kilos = Double.parseDouble(data.get("kilos").toString());
 
-        System.out.println("⚖️ [ARDUINO-SIGNAL] Peso en Punto " + puntoId + ": " + kilos + "kg");
-        TransaccionEntrega resultado = sessionService.procesarPesoRecibido(puntoId, kilos);
-        return ResponseEntity.ok(resultado);
+    @PostMapping("/registrar-peso")
+    public ResponseEntity<?> registrarPeso(@RequestBody Map<String, Object> data) {
+        try {
+
+            Long puntoId = Long.valueOf(data.get("puntoId").toString());
+            double kilos = Double.parseDouble(data.get("kilos").toString());
+
+            System.out.println("⚖️ [ARDUINO-SIGNAL] Peso en Punto " + puntoId + ": " + kilos + "kg");
+
+            // Procesa normalmente la transacción
+            TransaccionEntrega resultadoTransaccion = sessionService.procesarPesoRecibido(puntoId, kilos);
+
+            // 🔥 Datos para actualizar React
+            Integer nuevosPuntos = resultadoTransaccion.getReciclador().getSaldoPuntos();
+
+            // Respuesta personalizada
+            Map<String, Object> response = new java.util.HashMap<>();
+
+            response.put("idTransaccion",
+                    resultadoTransaccion.getId());
+
+            response.put("puntosOtorgados",
+                    resultadoTransaccion.getPuntosOtorgados());
+
+            response.put("totalPuntosUsuario",
+                    nuevosPuntos);
+
+            response.put("mensaje",
+                    "Carga procesada con éxito!");
+
+            return ResponseEntity.ok(response);
+
+        } catch (RuntimeException e) {
+
+            System.err.println("⚠️ [BLOQUEO IoT] " + e.getMessage());
+
+            return ResponseEntity
+                    .status(409)
+                    .body(e.getMessage());
+
+        } catch (Exception e) {
+
+            System.err.println("❌ Error en IotSessionController: " + e.getMessage());
+
+            e.printStackTrace();
+
+            return ResponseEntity
+                    .status(500)
+                    .body("Error interno del servidor al registrar peso.");
+        }
     }
 }
