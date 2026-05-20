@@ -1,5 +1,6 @@
 package com.plasti_usos.reciclaje.controller;
 
+import com.plasti_usos.reciclaje.model.Notificacion;
 import com.plasti_usos.reciclaje.model.Reciclador;
 import com.plasti_usos.reciclaje.model.Rol;
 import com.plasti_usos.reciclaje.model.TransaccionEntrega;
@@ -14,8 +15,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/identidad")
@@ -25,6 +24,8 @@ public class UsuarioController {
     private final UsuarioRepository usuarioRepository;
     @Autowired
     private UsuarioService service;
+    @Autowired
+    private com.plasti_usos.reciclaje.repository.NotificacionRepository notificacionRepo;
 
     UsuarioController(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
@@ -85,6 +86,11 @@ public class UsuarioController {
         System.out.println("[API] Verificando cuenta para: " + correo);
         boolean resultado = service.validarCuenta(correo, codigo);
         return ResponseEntity.ok(resultado);
+    }
+
+    @GetMapping("/{id}/notificaciones")
+    public List<Notificacion> obtenerNotificaciones(@PathVariable Long id) {
+        return notificacionRepo.findByUsuarioIdOrderByFechaDesc(id);
     }
 
 }

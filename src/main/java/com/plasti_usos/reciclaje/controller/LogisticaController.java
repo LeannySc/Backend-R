@@ -62,4 +62,12 @@ public class LogisticaController {
 
         return ResponseEntity.ok("✅ Punto vaciado. Ahora está disponible en VERDE para los ciudadanos.");
     }
+
+    // 🕵️ Recuperar misión si el operario refresca la página
+    @GetMapping("/mision-actual")
+    public ResponseEntity<PuntoRecoleccion> obtenerMisionActual(@RequestParam Long encargadoId) {
+        return puntoRepo.findByEncargadoEnCaminoIdAndOcupadoTrue(encargadoId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.noContent().build());
+    }
 }

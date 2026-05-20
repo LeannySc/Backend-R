@@ -20,6 +20,9 @@ public class CanjeService {
     @Autowired
     private GestorInventario gestorInventario;
 
+    @Autowired
+    private NotificacionService notificador;
+
     @Transactional
     public PedidoCanje procesarCanje(Long userId, Long productoId, String direccion) {
 
@@ -47,6 +50,15 @@ public class CanjeService {
             gestorInventario.liberarStock(productoId);
             throw new RuntimeException("Puntos insuficientes para esta maravilla.");
         }
+        if (!gestorInventario.reservarStock(productoId)) {
+            // 🚨 TRIGGER ADMIN: Agotamiento de recurso
+            notificador.alertarAdministradores(
+                    "STOCK AGOTADO: " + producto.getNombre(),
+                    "Un usuario intentó realizar un canje pero el stock llegó a cero.",
+                    "Acción: Reposición inmediata requerida",
+                    "CanjeService.java");
+            throw new RuntimeException("¡Maravilla agotada! ...");
+        }
 
         reciclador.setSaldoPuntos(saldoActual - producto.getCostoPuntos());
         usuarioRepo.save(reciclador);
@@ -59,6 +71,15 @@ public class CanjeService {
 
         String mensaje = String.format("🎁 ¡Hola %s! Canje exitoso por: %s. Descontamos %d pts.",
                 reciclador.getNombre(), producto.getNombre(), producto.getCostoPuntos());
+
+        notificador.enviar(
+                usuario,
+                "Canje confirmado — " + producto.getNombre(),
+                "Descontamos " + producto.getCostoPuntos() + " pts de tu billetera.",
+                "Pedido #" + guardado.getId() + " registrado con éxito", // Subtexto dinámico
+                "CanjeService.java", // Origen de la auditoría
+                false // Email no enviado por ahora
+        );
 
         notificadorService.notificar(mensaje);
 

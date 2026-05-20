@@ -12,6 +12,7 @@ import com.plasti_usos.reciclaje.repository.UsuarioRepository;
 
 import jakarta.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,9 +20,12 @@ import java.util.Map;
 
 @Service
 public class UsuarioService {
+    @Autowired
+    private NotificacionService notificador;
 
     private final EmailService emailService;
     private final PinVerificacionRepository pinRepository;
+    @Autowired
     private UsuarioRepository usuarioRepository;
 
     UsuarioService(EmailService emailService,
@@ -156,10 +160,22 @@ public class UsuarioService {
             if (pin.getUsuario().getId().equals(u.getId()) && !pin.isUsado()) {
                 u.setVerificado(true);
                 pin.setUsado(true);
+
                 usuarioRepository.save(u);
-                pinRepository.save(pin); // Sellamos el PIN como usado
+                pinRepository.save(pin);
+
+                // ✅ AQUÍ LA MEJORA: Solo eliminamos una vez el PIN y disparamos la notificación
+                pinRepository.deleteByUsuarioId(u.getId());
+
+                notificador.enviar(
+                        u,
+                        "Cuenta verificada exitosamente",
+                        "Tu cuenta GTI-3 fue activada",
+                        "Inicia tu impacto en Popayán",
+                        "UsuarioService.java",
+                        true);
+
                 System.out.println("✅ [SECURITY] Cuenta blindada para: " + correo);
-                pinRepository.deleteByUsuarioId(u.getId()); // Limpiamos cualquier PIN restante para este usuario
                 return true;
             }
             System.err.println("❌ [SECURITY] Intento de validación fallido para: " + correo);

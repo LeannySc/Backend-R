@@ -20,6 +20,8 @@ public class TransaccionService {
     private TipoMaterialRepository materialRepo;
     @Autowired
     private ServicioNotificaciones notificadorService;
+    @Autowired
+    private NotificacionService notificador;
 
     @Transactional
     public TransaccionEntrega procesarEntrega(Long usuarioId, Long puntoId, double kilos, Long encargadoId,
@@ -87,12 +89,20 @@ public class TransaccionService {
         // 6. PERSISTENCIA
         usuarioRepo.save(reciclador);
         usuarioRepo.saveAndFlush(reciclador);
-        //TransaccionEntrega guardada = transaccionRepo.save(t);
+        // TransaccionEntrega guardada = transaccionRepo.save(t);
 
         // Notificaciones
         String msj = String.format("¡Hola %s! Ganaste %d pts por traer %s.", reciclador.getNombre(), puntosFinales,
                 material.getNombre());
         notificadorService.notificar(msj);
+
+        // Justo antes del return
+        notificador.enviar(reciclador,
+                "Recibiste " + puntosFinales + " puntos GTI",
+                "Tu entrega fue validada con éxito",
+                "Saldo: " + reciclador.getSaldoPuntos() + " pts",
+                "TransaccionService.java",
+                false);
 
         return transaccionRepo.save(t);
         // return guardada;

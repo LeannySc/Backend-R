@@ -59,4 +59,19 @@ public class PuntoRecoleccion {
         this.necesitaRecoleccion = false;
     }
 
+    // Actualización inteligente de estados GTI-3
+    public void registrarNuevoPeso(double kilosExtra) {
+        this.nivelLlenado = Math.min(100.0, this.nivelLlenado + (kilosExtra * 100 / this.capacidadMaximakg));
+        this.necesitaRecoleccion = (this.nivelLlenado >= 85.0);
+
+        if (this.nivelLlenado >= 85.0)
+            this.estadoBote = "LLENO/CRÍTICO";
+        else if (this.nivelLlenado > 40.0)
+            this.estadoBote = "MEDIO";
+        else
+            this.estadoBote = "DISPONIBLE";
+    }
+
+    
+
 }
